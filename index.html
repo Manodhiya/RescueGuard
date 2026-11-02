@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RescueGuard Live Monitor</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700&family=Barlow:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>RescueGuard Live Monitor</h1>
+  <div class="conn"><span class="dot" id="cdot"></span><span id="ctext">Starting…</span>
+  <button class="sm" id="snd">Alarm sound: off</button></div>
+</header>
+
+<details class="card" id="setup" style="margin-bottom:14px">
+  <summary style="cursor:pointer;font-weight:600">Connection settings</summary>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+    <input id="tok" placeholder="Paste your Blynk auth token" style="flex:1;min-width:220px;padding:8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);font:inherit">
+    <select id="srv" style="padding:8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);font:inherit"><option>blynk.cloud</option><option>blr1.blynk.cloud</option></select>
+    <button class="sm" id="save">Connect</button>
+  </div>
+  <p class="note" style="margin-bottom:0">Raw data from Blynk: <code id="raw">nothing received yet</code></p>
+</details>
+
+<div class="grid">
+  <aside class="card">
+    <h2>Workers</h2>
+    <div class="workers" id="workers" style="margin-top:10px"></div>
+    <p class="note">Worker 1 reads your real helmet through Blynk. Workers 2 to 4 are simulated demo data.</p>
+    <h2 style="margin-top:14px">Demo scenarios</h2>
+    <button class="sm dbtn" data-scn="gas">Gas leak on Worker 3</button>
+    <button class="sm dbtn" data-scn="fall">Fall on Worker 2</button>
+    <button class="sm dbtn" data-scn="sos">SOS from Worker 4</button>
+  </aside>
+
+  <main>
+    <div class="tiles" id="sum"></div>
+    <div class="banner" id="banner">
+      <div><div style="font-size:14px" id="bname">Worker</div><div class="big" id="bstate">SAFE</div></div>
+      <div style="text-align:right;font-size:14px" id="bsub">Waiting for data</div>
+      <button class="sm" id="ack" style="display:none">Acknowledge alarm</button>
+    </div>
+
+    <div class="tiles">
+      <div class="tile" id="t-temp"><span>Temperature</span><div class="big" id="v-temp">--</div></div>
+      <div class="tile" id="t-gas"><span>Gas status</span><div class="big" id="v-gas">--</div></div>
+      <div class="tile" id="t-fall"><span>Fall status</span><div class="big" id="v-fall">--</div></div>
+      <div class="tile" id="t-sos"><span>SOS status</span><div class="big" id="v-sos">--</div></div>
+    </div>
+
+    <div class="row">
+      <div class="card gauge">
+        <span style="font-size:14px;color:var(--mute)">Gas level</span>
+        <svg viewBox="0 0 200 170" role="img" aria-label="Gas level gauge">
+          <path d="M 40 140 A 70 70 0 1 1 160 140" fill="none" stroke="var(--line)" stroke-width="16" stroke-linecap="round" pathLength="100"/>
+          <path id="arc" d="M 40 140 A 70 70 0 1 1 160 140" fill="none" stroke="var(--blue)" stroke-width="16" stroke-linecap="round" pathLength="100" stroke-dasharray="0 100"/>
+          <text x="100" y="105" text-anchor="middle" class="gnum" fill="currentColor" id="gnum">0</text>
+          <text x="38" y="162" font-size="12" fill="var(--mute)">0</text>
+          <text x="140" y="162" font-size="12" fill="var(--mute)">4095</text>
+        </svg>
+      </div>
+      <div class="card">
+        <h2>Live trend</h2>
+        <canvas id="chart" width="700" height="190"></canvas>
+        <div class="legend"><span><i style="background:#0b62ff"></i>Gas level</span><span><i style="background:#e89b00"></i>Temperature (0 to 100 °C scale)</span></div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <h2>Site map</h2>
+      <svg id="map" viewBox="0 0 600 240" role="img" aria-label="Worker positions on site map"></svg>
+      <p class="note" style="margin-bottom:0">Positions are simulated. Add a GPS module to make Worker 1 live.</p>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <div class="hd"><h2>Event log</h2><button class="sm" id="csv">Export CSV report</button></div>
+      <ul id="log"></ul>
+    </div>
+  </main>
+</div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/app.js"></script>
+<script src="js/extras.js"></script>
+</body>
+</html>
